@@ -5,7 +5,6 @@ program DinoGame {
 	juego.configurar()
 	//juego.iniciar()
 	game.showAttributes(dino) //Debug
-	keyboard.c().onPressDo({game.say(dino, reloj.tiempo().toString())})
 	game.start()
 	
 }

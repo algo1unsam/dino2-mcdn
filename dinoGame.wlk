@@ -104,7 +104,10 @@ object dino {
 	method image() = "dino.png"
 	
 	method saltar(){
-		//COMPLETAR
+		if (!self.restriccion()){
+			keyboard.space().onPressDo({ self.subir() })
+			game.schedule(200, {self.bajar()})
+		}
 	}
 	
 	method subir(){
@@ -113,6 +116,7 @@ object dino {
 	
 	method bajar(){
 		position = position.down(1)
+		//game.removeTickEvent("bajar")
 	}
 	method morir(){
 		game.say(self,"¡Auch!")
@@ -124,4 +128,7 @@ object dino {
 	method estaVivo() {
 		return vivo
 	}
+
+	method restriccion() = position.y().max(2)
+	
 }
