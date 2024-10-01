@@ -13,9 +13,13 @@ object juego{
 		game.addVisual(cactus)
 		game.addVisual(dino)
 		game.addVisual(reloj)
+		reloj.iniciar()
 	
 		keyboard.space().onPressDo{ self.jugar()}
-		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
+		game.onCollideDo(dino,{ obstaculo => 
+		obstaculo.chocar()
+		reloj.detener()
+		})
 		
 	} 
 	
@@ -52,18 +56,18 @@ object gameOver {
 object reloj {
 	var property tiempo = 0 
 	method text() = tiempo.toString()
-  //method textColor() = "00FF00FF"
+  	//method textColor() = "00FF00FF"
 	method position() = game.at(1, game.height()-1)
 	
 	method pasarTiempo() {
-		//COMPLETAR = MOSTRAR CONTADOR
+		tiempo = tiempo + 10
 	}
 	method iniciar(){
 		tiempo = 0
 		game.onTick(100,"tiempo",{self.pasarTiempo()})
 	}
 	method detener(){
-		//COMPLETAR 
+		game.removeTickEvent('tiempo')
 	}
 }
 
