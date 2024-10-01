@@ -2,8 +2,7 @@ import dinoGame.*
 
 
 test "pasa el tiempo" {
-
 	reloj.pasarTiempo()
 	reloj.pasarTiempo()
-	//assert.equals("2",reloj.text())
+	assert.equals("20",reloj.text())
 }
