@@ -701,3 +701,5 @@
 {"level":"info","message":"⌛ Validating mainExample.wpgm","timeElapsed":191,"timestamp":"2024-10-01T21:33:52.654Z"}
 {"level":"info","message":"⌛ Building environment","timeElapsed":107,"timestamp":"2024-10-01T21:33:52.761Z"}
 {"level":"info","message":"⌛ Validating mainExample.wpgm","timeElapsed":228,"timestamp":"2024-10-01T21:33:52.992Z"}
+{"level":"info","message":"⌛ Validating dino.wtest","timeElapsed":112,"timestamp":"2024-10-01T21:37:41.598Z"}
+{"failures":[],"level":"info","message":"🧪 Test runner executed on c:\\Users\\nicol\\OneDrive\\Documentos\\UNSAM\\2°_CUAT_2024\\Algoritmos_I\\dino2-mcdn","result":{"failed":0,"ok":1},"timeElapsed":283,"timestamp":"2024-10-01T21:37:48.260Z"}
