@@ -30,16 +30,16 @@ object juego{
 	}
 	
 	method jugar(){
-		if (dino.estaVivo()) 
-			dino.saltar()
-		else {
+		if (dino.estaVivo()) {
+      dino.saltar()
+		} else {
 			game.removeVisual(gameOver)
 			self.iniciar()
 		}
 		
 	}
 	
-	method terminar(){
+	method terminar() {
 		game.addVisual(gameOver)
 		cactus.detener()
 		reloj.detener()
@@ -87,9 +87,10 @@ object cactus {
 	}
 	
 	method chocar(){
-		game.onCollideDo(self, {dino => juego.terminar()})
+		if(self.position() == dino.position()) juego.terminar()
 	}
-    method detener(){
+  
+  method detener(){
 		game.removeTickEvent("moverCactus")
 	}
 }
@@ -103,14 +104,17 @@ object suelo{
 
 object dino {
 	var vivo = true
+	var inAir = false
 	var property position = game.at(1,suelo.position().y())
 	
 	method image() = "dino.png"
 	
 	method saltar(){
-		if (!self.restriccion()){
-			keyboard.space().onPressDo({ self.subir() })
-			game.schedule(200, {self.bajar()})
+		if (self.estaEnSuelo()  && !inAir){
+      inAir = true
+			self.subir()
+			game.schedule(700, {self.bajar()})
+			game.schedule(750, {inAir = false})
 		}
 	}
 	
@@ -120,7 +124,6 @@ object dino {
 	
 	method bajar(){
 		position = position.down(1)
-		//game.removeTickEvent("bajar")
 	}
 	method morir(){
 		game.say(self,"¡Auch!")
@@ -133,6 +136,6 @@ object dino {
 		return vivo
 	}
 
-	method restriccion() = position.y().max(2)
+	method estaEnSuelo() = suelo.position().y() == self.position().y()
 	
 }
