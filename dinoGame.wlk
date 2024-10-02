@@ -11,35 +11,47 @@ object juego{
 		game.boardGround("fondo.png")
 		game.addVisual(suelo)
 		game.addVisual(cactus)
-		game.addVisual(dino)
+		game.addVisual(dino1)
+		game.addVisual(dino2)
 		game.addVisual(reloj)
+		reloj.iniciar()
 	
 		keyboard.space().onPressDo{ self.jugar()}
-		game.onCollideDo(dino,{ obstaculo => obstaculo.chocar()})
+		game.onCollideDo(dino1,{ obstaculo => 
+		obstaculo.chocar()
+		reloj.detener()
+		})
+    game.onCollideDo(dino2,{ obstaculo => 
+		obstaculo.chocar()
+		reloj.detener()
+		})
 		
 	} 
 	
 	method iniciar(){
-		dino.iniciar()
+		dino1.iniciar()
+		dino2.iniciar()
 		reloj.iniciar()
 		cactus.iniciar()
 	}
 	
 	method jugar(){
-		if (dino.estaVivo()) 
-			dino.saltar()
-		else {
+		if (dino1.estaVivo()) {
+      dino1.saltar()
+      dino2.saltar()
+		} else {
 			game.removeVisual(gameOver)
 			self.iniciar()
 		}
 		
 	}
 	
-	method terminar(){
+	method terminar() {
 		game.addVisual(gameOver)
 		cactus.detener()
 		reloj.detener()
-		dino.morir()
+		dino1.morir()
+		dino2.morir()
 	}
 	
 }
@@ -52,18 +64,18 @@ object gameOver {
 object reloj {
 	var property tiempo = 0 
 	method text() = tiempo.toString()
-  //method textColor() = "00FF00FF"
+  	//method textColor() = "00FF00FF"
 	method position() = game.at(1, game.height()-1)
 	
 	method pasarTiempo() {
-		//COMPLETAR
+		tiempo = tiempo + 10
 	}
 	method iniciar(){
 		tiempo = 0
 		game.onTick(100,"tiempo",{self.pasarTiempo()})
 	}
 	method detener(){
-		//COMPLETAR
+		game.removeTickEvent('tiempo')
 	}
 }
 
@@ -79,14 +91,16 @@ object cactus {
 	}
 	
 	method mover(){
-		//COMPLETAR
+		position = self.position().left(1)
 	}
 	
 	method chocar(){
-		//COMPLETAR
+		if(self.position() == dino1.position()) juego.terminar()
+		if(self.position() == dino2.position()) juego.terminar()
 	}
-    method detener(){
-		//COMPLETAR
+
+  method detener(){
+		game.removeTickEvent("moverCactus")
 	}
 }
 
@@ -97,14 +111,20 @@ object suelo{
 }
 
 
-object dino {
+class Dino {
 	var vivo = true
-	var property position = game.at(1,suelo.position().y())
+	var inAir = false
+	var property position
 	
 	method image() = "dino.png"
 	
 	method saltar(){
-		//COMPLETAR
+		if (self.estaEnSuelo()  && !inAir){
+      inAir = true
+			self.subir()
+			game.schedule(700, {self.bajar()})
+			game.schedule(750, {inAir = false})
+		}
 	}
 	
 	method subir(){
@@ -124,4 +144,10 @@ object dino {
 	method estaVivo() {
 		return vivo
 	}
+
+	method estaEnSuelo() = suelo.position().y() == self.position().y()
+	
 }
+
+const dino1 = new Dino(position = game.at(1,suelo.position().y()))
+const dino2 = new Dino(position = game.at(5,suelo.position().y()))
