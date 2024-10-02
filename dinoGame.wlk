@@ -11,12 +11,17 @@ object juego{
 		game.boardGround("fondo.png")
 		game.addVisual(suelo)
 		game.addVisual(cactus)
-		game.addVisual(dino)
+		game.addVisual(dino1)
+		game.addVisual(dino2)
 		game.addVisual(reloj)
 		reloj.iniciar()
 	
 		keyboard.space().onPressDo{ self.jugar()}
-		game.onCollideDo(dino,{ obstaculo => 
+		game.onCollideDo(dino1,{ obstaculo => 
+		obstaculo.chocar()
+		reloj.detener()
+		})
+    game.onCollideDo(dino2,{ obstaculo => 
 		obstaculo.chocar()
 		reloj.detener()
 		})
@@ -24,14 +29,16 @@ object juego{
 	} 
 	
 	method iniciar(){
-		dino.iniciar()
+		dino1.iniciar()
+		dino2.iniciar()
 		reloj.iniciar()
 		cactus.iniciar()
 	}
 	
 	method jugar(){
-		if (dino.estaVivo()) {
-      dino.saltar()
+		if (dino1.estaVivo()) {
+      dino1.saltar()
+      dino2.saltar()
 		} else {
 			game.removeVisual(gameOver)
 			self.iniciar()
@@ -43,7 +50,8 @@ object juego{
 		game.addVisual(gameOver)
 		cactus.detener()
 		reloj.detener()
-		dino.morir()
+		dino1.morir()
+		dino2.morir()
 	}
 	
 }
@@ -87,9 +95,10 @@ object cactus {
 	}
 	
 	method chocar(){
-		if(self.position() == dino.position()) juego.terminar()
+		if(self.position() == dino1.position()) juego.terminar()
+		if(self.position() == dino2.position()) juego.terminar()
 	}
-  
+
   method detener(){
 		game.removeTickEvent("moverCactus")
 	}
@@ -102,10 +111,10 @@ object suelo{
 }
 
 
-object dino {
+class Dino {
 	var vivo = true
 	var inAir = false
-	var property position = game.at(1,suelo.position().y())
+	var property position
 	
 	method image() = "dino.png"
 	
@@ -139,3 +148,6 @@ object dino {
 	method estaEnSuelo() = suelo.position().y() == self.position().y()
 	
 }
+
+const dino1 = new Dino(position = game.at(1,suelo.position().y()))
+const dino2 = new Dino(position = game.at(5,suelo.position().y()))
